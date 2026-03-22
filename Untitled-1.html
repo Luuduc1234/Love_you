@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For My Love ❤️</title>
+
+<style>
+body {
+    margin: 0;
+    background: black;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* BUTTON */
+#startBtn {
+  padding: 18px 40px; font-size: 20px; border-radius: 15px; border: none; background: linear-gradient(145deg, #ff9aa2, #ff6f91); color: white; cursor: pointer; box-shadow: 0 6px #c94c6d, 0 0 15px pink; transition: all 0.2s; animation: glow 1.2s infinite alternate;
+}
+
+/* HEART */
+#heart {
+    display: none;
+    font-size: 180px;
+    cursor: pointer;
+    animation: beat 0.8s infinite;
+}
+@keyframes beat {
+    50% { transform: scale(1.3); }
+}
+
+/* GRID */
+#grid {
+    display: none;
+    width: 320px;
+    height: 320px;
+    position: relative;
+    clip-path: path("M160 300 L20 150 A80 80 0 1 1 160 70 A80 80 0 1 1 300 150 Z");
+}
+
+/* TILE */
+.tile {
+    position: absolute;
+    transform-style: preserve-3d;
+    transition: transform 0.8s;
+}
+
+/* FLIP */
+.tile.flip {
+    transform: rotateY(180deg);
+}
+
+/* 2 MẶT */
+.face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+}
+
+/* FRONT (TIM ĐỎ) */
+.front {
+    background: red;
+}
+
+/* BACK (ẢNH) */
+.back {
+    transform: rotateY(180deg);
+    background-size: 320px 320px;
+}
+
+/* TEXT */
+#text {
+    position: absolute;
+    bottom: 70px;
+    width: 90%;
+    text-align: center;
+    color: white;
+    font-size: 20px;
+}
+
+.snow {
+    position: absolute;
+    top: -10px;
+    color: pink;
+    font-size: 14px;
+    animation: fall linear infinite;
+}
+
+@keyframes fall {
+    to {
+        transform: translateY(110vh);
+    }
+}
+</style>
+</head>
+
+<body>
+<audio id="music" loop>
+    <source src="./snaptik.vn_7580214290225876232.mp3" type="audio/mpeg">
+</audio>
+<audio id="typingSound">
+    <source src="https://www.soundjay.com/mechanical/keyboard-1.mp3" type="audio/mpeg">
+</audio>
+
+<button id="startBtn">Gửi cho yêu nè 💌</button>
+<div id="heart">❤️</div>
+<div id="grid"></div>
+<div id="text"></div>
+
+<script>
+const btn = document.getElementById("startBtn");
+const heart = document.getElementById("heart");
+const grid = document.getElementById("grid");
+const text = document.getElementById("text");
+
+// STEP 1
+btn.onclick = () => {
+    btn.style.display = "none";
+    heart.style.display = "block";
+};
+
+// STEP 2
+heart.onclick = () => {
+
+    heart.style.display = "none";
+    grid.style.display = "block";
+
+    document.getElementById("music").play(); // 🔥 bật nhạc
+
+    createTiles();
+};
+// CREATE PIXEL FLIP
+function createTiles() {
+    const size = 8;
+    const tileSize = 320 / size;
+
+    for (let y = 0; y < size; y++) {
+        for (let x = 0; x < size; x++) {
+
+            const tile = document.createElement("div");
+            tile.className = "tile";
+
+            tile.style.width = tileSize + "px";
+            tile.style.height = tileSize + "px";
+            tile.style.left = x * tileSize + "px";
+            tile.style.top = y * tileSize + "px";
+
+            // FRONT (TIM)
+            const front = document.createElement("div");
+            front.className = "face front";
+
+            // BACK (ẢNH CHIA NHỎ)
+            const back = document.createElement("div");
+            back.className = "face back";
+            back.style.backgroundImage = "url('d28317c7d86956370f78.jpg')";
+            back.style.backgroundPosition = `-${x*tileSize}px -${y*tileSize}px`;
+
+            tile.appendChild(front);
+            tile.appendChild(back);
+
+            grid.appendChild(tile);
+
+            // delay lật dạng sóng
+            setTimeout(() => {
+                tile.classList.add("flip");
+            }, (x + y) * 120);
+        }
+    }
+
+    setTimeout(typeText, 2500);
+}
+
+// TEXT
+const message = "Chúc yêu ngủ ngon nhaaaa ❤️";
+
+function typeText() {
+    let i = 0;
+    const interval = setInterval(() => {
+        text.innerHTML += message[i];
+        i++;
+        if (i >= message.length) clearInterval(interval);
+    }, 80);
+}
+
+setInterval(() => {
+    const snow = document.createElement("div");
+    snow.className = "snow";
+    snow.innerHTML = "💗"; // có thể đổi ❄️
+    snow.style.left = Math.random() * window.innerWidth + "px";
+    snow.style.animationDuration = (Math.random()*3 + 2) + "s";
+
+    document.body.appendChild(snow);
+
+    setTimeout(() => snow.remove(), 5000);
+}, 200);
+
+</script>
+
+</body>
+</html>
